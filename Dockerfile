@@ -11,7 +11,8 @@ RUN mkdir /miner
 WORKDIR /miner
 RUN git clone https://github.com/dominant-strategies/quai-gpu-miner.git
 RUN cd quai-gpu-miner/
-RUN cd quai-gpu-miner && git checkout v0.1.0-rc.1
+ARG miner_tag=v0.1.0-rc.1
+RUN cd quai-gpu-miner && git checkout $miner_tag
 RUN cd quai-gpu-miner && git submodule update --init --recursive
 RUN cd quai-gpu-miner && mkdir build
 RUN cd quai-gpu-miner/build && cmake .. && cmake --build .
