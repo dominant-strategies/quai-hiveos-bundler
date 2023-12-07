@@ -6,7 +6,6 @@
 
 . h-manifest.conf
 
-unset LD_LIBRARY_PATH
 
 conf=`cat $MINER_CONFIG_FILENAME`
 
