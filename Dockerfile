@@ -7,15 +7,20 @@ RUN apt install -y cmake
 RUN apt install -y build-essential 
 RUN apt install -y mesa-common-dev 
 RUN apt install -y nvidia-driver-530
+RUN apt install -y wget
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu1804/x86_64/cuda-keyring_1.0-1_all.deb
+RUN dpkg -i cuda-keyring_1.0-1_all.deb
+RUN apt-get update
+RUN apt-get -y install cuda
 RUN mkdir /miner
 WORKDIR /miner
 RUN git clone https://github.com/dominant-strategies/quai-gpu-miner.git
 RUN cd quai-gpu-miner/
 ARG miner_tag=v0.1.0-rc.1
-RUN cd quai-gpu-miner && git checkout $miner_tag
+RUN cd quai-gpu-miner && git fetch --all && git checkout $miner_tag
 RUN cd quai-gpu-miner && git submodule update --init --recursive
 RUN cd quai-gpu-miner && mkdir build
-RUN cd quai-gpu-miner/build && cmake .. && cmake --build .
+RUN cd quai-gpu-miner/build && cmake .. -DETHASHCUDA=ON  && cmake --build .
 RUN apt install -y awscli
 COPY hiveos_packager /miner/quai_custom
 ARG hive_version=0.0.10
