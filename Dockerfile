@@ -13,17 +13,17 @@ COPY ubuntu_deploy_script.sh .
 # Make the script executable
 RUN chmod +x ubuntu_deploy_script.sh
 
-# Install required dependencies
+# Install required dependencies including CUDA
 RUN apt update && apt install -y \
     build-essential \
     cmake \
     mesa-common-dev \
     git \
-    wget
-
-RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.1-1_all.deb
-RUN dpkg -i cuda-keyring_1.1-1_all.deb
-RUN apt update && apt install cuda-toolkit-12-6 -y
+    wget && \
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2004/x86_64/cuda-keyring_1.1-1_all.deb && \
+    dpkg -i cuda-keyring_1.1-1_all.deb && \
+    apt update && apt install -y cuda-toolkit-12-6 && \
+    rm -rf /var/lib/apt/lists/* /cuda-keyring_1.1-1_all.deb
 
 # Run the script to build the binary
-CMD ./ubuntu_deploy_script.sh
+CMD ["./ubuntu_deploy_script.sh"]
